@@ -135,33 +135,34 @@ noButton.addEventListener("click", async () => {
 
 //send email
 async function sendEmail(status) {
-	let params = new URLSearchParams(window.location.search);
-	let email = params.get("email");
-	let crush = params.get("crush");
-	console.log(email, crush, status);
+    let params = new URLSearchParams(window.location.search);
+    let email = params.get("email");
+    let crush = params.get("crush");
+    console.log(email, crush, status);
 
-	// Create a FormData object
-	let formData = new FormData();
-	formData.append("email", email);
-	formData.append("crush", crush);
-	formData.append("status", status);
+    // Create a FormData object
+    let formData = new FormData();
+    formData.append("email", email);
+    formData.append("crush", crush);
+    formData.append("status", status);
 
-	// Send mail to the creator custom PHP
-	try {
-		const response = await fetch("sendMail.php", {
-			method: "POST",
-			
-			body: formData,
-		});
-		const data = await response.json();
-		if (data.status === 200) {
-			launch_toast("Email Sent Successfully");
-		}
-	} catch (error) {
-		console.error("Error sending email:", error);
-	}
+    // Send mail to the creator custom PHP
+    try {
+        const response = await fetch("https://bemyvalentine.aakashdhakal.com.np/sendMail.php", {
+            method: "POST",
+        headers: {
+				"Content-Type": "multipart/form-data",
+			},
+            body: formData,
+        });
+        const data = await response.json();
+        if (data.status === 200) {
+            launch_toast("Email Sent Successfully");
+        }
+    } catch (error) {
+        console.error("Error sending email:", error);
+    }
 }
-
 function closeDialog() {
 	dialog.close();
 }
