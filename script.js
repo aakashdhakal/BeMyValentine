@@ -87,16 +87,32 @@ let copyToClipboard = document.querySelector(".link-area button");
 
 copyToClipboard.addEventListener("click", () => {
 	let linkArea = document.querySelector(".link-area a");
-	let linkText = linkArea.textContent;
+	let linkText = linkArea.innerHTML;
+	console.log(linkText);
 
-	navigator.clipboard
-		.writeText(linkText)
-		.then(() => {
+	if (navigator.clipboard) {
+		navigator.clipboard.writeText(linkText).then(
+			function () {
+				launch_toast("Link copied to clipboard");
+			},
+			function (err) {
+				console.error("Failed to copy: ", err);
+			}
+		);
+	} else {
+		let textArea = document.createElement("textarea");
+		textArea.value = linkText;
+		document.body.appendChild(textArea);
+		textArea.focus();
+		textArea.select();
+		try {
+			document.execCommand("copy");
 			launch_toast("Link copied to clipboard");
-		})
-		.catch((err) => {
-			console.error("Could not copy text: ", err);
-		});
+		} catch (err) {
+			console.error("Failed to copy: ", err);
+		}
+		document.body.removeChild(textArea);
+	}
 });
 
 function openDialog() {
@@ -150,7 +166,7 @@ async function sendEmail(status) {
 	try {
 		const response = await fetch("sendMail.php", {
 			method: "POST",
-			
+
 			body: formData,
 		});
 		const data = await response.json();
