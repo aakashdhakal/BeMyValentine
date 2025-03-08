@@ -125,12 +125,14 @@ let noButton = document.querySelector("#no");
 yesButton.addEventListener("click", async () => {
 	yesButton.innerHTML = "<i class='fas fa-spinner fa-spin'></i> ";
 	await sendEmail("yes");
+	launch_toast("The response is sent successfully");
 	dialog.close();
 });
 
 noButton.addEventListener("click", async () => {
 	noButton.innerHTML = "<i class='fas fa-spinner fa-spin'></i> ";
 	await sendEmail("no");
+	launch_toast("The response is sent successfully");
 	dialog.close();
 });
 
@@ -161,8 +163,4 @@ async function sendEmail(status) {
 	} catch (error) {
 		console.error("Error sending email:", error);
 	}
-}
-
-function closeDialog() {
-	dialog.close();
 }
