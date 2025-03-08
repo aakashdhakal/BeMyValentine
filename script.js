@@ -85,33 +85,18 @@ function launch_toast(message) {
 
 let copyToClipboard = document.querySelector(".link-area button");
 
-copyToClipboard.addEventListener("click", () => {
+copyToClipboard.addEventListener("click", async () => {
 	let linkArea = document.querySelector(".link-area a");
-	let linkText = linkArea.innerHTML;
-	console.log(linkText);
-
-	if (navigator.clipboard) {
-		navigator.clipboard.writeText(linkText).then(
-			function () {
-				launch_toast("Link copied to clipboard");
-			},
-			function (err) {
-				console.error("Failed to copy: ", err);
-			}
-		);
-	} else {
-		let textArea = document.createElement("textarea");
-		textArea.value = linkText;
-		document.body.appendChild(textArea);
-		textArea.focus();
-		textArea.select();
-		try {
-			document.execCommand("copy");
-			launch_toast("Link copied to clipboard");
-		} catch (err) {
-			console.error("Failed to copy: ", err);
-		}
-		document.body.removeChild(textArea);
+	let linkText = linkArea.textContent;
+	if (linkText === "Please share this link to your valentine" || linkText === "") {
+		launch_toast("Please create a link first");
+		return;
+	}
+	try {
+		await navigator.clipboard.writeText(linkText);
+		launch_toast("Link copied to clipboard");
+	} catch (err) {
+		console.error("Failed to copy: ", err);
 	}
 });
 
